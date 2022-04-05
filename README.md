@@ -10,6 +10,9 @@ CI | Build
 :------------: | :------------: 
 AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/y4sp6sijsdvu2v80/branch/master?svg=true)](https://ci.appveyor.com/project/majorcyto/wdbxeditor/branch/master) | 
 
+# Screen Shots
+
+![alt tag](https://i.imgur.com/lC6jVLw.jpg "WDB2")
 
 ### About
 This editor has full support for reading and saving all release versions of DBC, DB2, WDB, ADB and DBCache. This does include support for Legion DB2 and DBCache files and works with all variants (header flags) of these.
