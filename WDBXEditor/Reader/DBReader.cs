@@ -116,8 +116,8 @@ namespace WDBXEditor.Reader
 					throw new Exception("Definition missing.");
 
 			//	if (header.FieldCount != entry.TableStructure.Fields.Where(x => !x.AutoGenerate).Sum(x => x.ArraySize))
-				if (header.FieldCount != entry.TableStructure.Fields.Count(x => !x.AutoGenerate && !x.Relationship && !x.NonInline))
-			//	if (header.FieldCount != GetFieldCount(header, entry))
+			//	if (header.FieldCount != entry.TableStructure.Fields.Count(x => !x.AutoGenerate && !x.Relationship && !x.NonInline))
+				if (header.FieldCount != GetFieldCount(header, entry))
 					throw new Exception("Column mismatch.");
 
 				if (header is WDC1 wdc1)
