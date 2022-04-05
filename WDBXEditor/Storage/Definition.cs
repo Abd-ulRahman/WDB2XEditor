@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -119,17 +119,6 @@ namespace WDBXEditor.Storage
 				return type;
 			}
 		}
-
-	//	public bool LoadDBDefinition(string path)
-	//	public bool LoadDBDefinition(string path, out List<string> errors)
-	//	{
-	//		errors = new List<string>();
-
-	//		if (_loading) return true;
-
-	//		var reader = new DBDefsLib.DBDReader();
-	//		var dbdef = reader.Read(path);
-	//		var dbName = Path.GetFileNameWithoutExtension(path);
 		private Table BuildTable(DBDefsLib.Structs.VersionDefinitions dbdversion,
 									DBDefsLib.Structs.DBDefinition dbdef,
 									string dbName,
@@ -144,8 +133,8 @@ namespace WDBXEditor.Storage
 
 			Func<string, string> formatFieldName = (s) =>
 			{
-				//string[] parts = s.Split('_');
-				string[] parts = s.Split(new[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
+				string[] parts = s.Split('_');
+				//string[] parts = s.Split(new[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
 				for (int i = 0; i < parts.Length; i++)
 					parts[i] = char.ToUpper(parts[i][0]) + parts[i].Substring(1);
 
@@ -186,18 +175,6 @@ namespace WDBXEditor.Storage
 				table.Fields.Add(field);
 			}
 
-			// WDBX requires an ID column
-			//if (!table.Fields.Any(x => x.IsIndex))
-			//{
-			//	Field autoGenerate = new Field()
-			//	{
-			//		Name = "ID",
-			//		AutoGenerate = true,
-			//		IsIndex = true
-			//	};
-
-			//	table.Fields.Insert(0, autoGenerate);
-			//}
 			if (!table.Fields.Any(x => x.IsIndex))
 			{
 				Field autoGenerate = new Field()
@@ -229,84 +206,15 @@ namespace WDBXEditor.Storage
 
 			var newtables = new List<Table>();
 
-			// hacky range code to test the loading of 18179
+			// going to need some form of build lookup or summat for ranges...
 			foreach (var dbdversion in dbdef.versionDefinitions)
 			{
-		//		foreach (var dbdbuild in dbdversion.builds)
 				foreach (var dbdbuild in dbdversion.buildRanges)
 				{
-				/*	var table = new Table();
-					table.Build = (int)dbdbuild.build;
-					table.BuildText = DBDefsLib.Utils.BuildToString(dbdbuild);
-					table.Fields = new List<Field>();
-					table.Name = dbName;
-
-					Field relation = null;
-					foreach (var dbdfield in dbdversion.definitions)*/
-			/*		if (dbdbuild.minBuild.expansion <= 6 && 
-						dbdbuild.maxBuild.expansion >= 6 && 
-						dbdbuild.minBuild.build <= 18179 && 
-						dbdbuild.maxBuild.build >= 18179)
-					{
-					{
-						var field = new Field();
-						if (dbdfield.arrLength > 0)
-						{
-							field.ArraySize = dbdfield.arrLength;
-						}
-
-						if (dbdfield.isID || dbdfield.name == "ID")
-						{
-							field.IsIndex = true;
-							field.NonInline = dbdfield.isNonInline;
-						}
-
-						//field.Name = dbdfield.name;
-						field.Name = formatFieldName(dbdfield.name);
-						field.Type = DBDTypeToWDBXType(dbdef.columnDefinitions[dbdfield.name].type, dbdfield.size);
-					//	field.AutoGenerate = dbdfield.isNonInline;
-
-					//	if (field.AutoGenerate && !field.IsIndex) 
-					//		continue; // skip relationship data columns but keep parent columns
-
-					//	if (!dbdfield.isRelation) // skip for now
-					//		table.Fields.Add(field);
-						if (dbdfield.isNonInline && dbdfield.isRelation)
-						{
-							field.Relationship = true; // append relations to the end
-							relation = field;
-							continue;
-						}
-						else if (dbdfield.isRelation)
-						{
-							relation = field.Clone() as Field;
-							relation.Relationship = true;
-							relation.Name = field.Name + "_RelationShip"; // append parents to the end
-						}
-
-						table.Fields.Add(field);
-						newtables.Add(BuildTable(dbdversion, dbdef, dbName, "6.0.1.18179", 18179));
-					}*/
 					newtables.Add(BuildTable(dbdversion, dbdef, dbName, DBDefsLib.Utils.BuildToString(dbdbuild.minBuild), dbdbuild.minBuild.build));
 					newtables.Add(BuildTable(dbdversion, dbdef, dbName, DBDefsLib.Utils.BuildToString(dbdbuild.maxBuild), dbdbuild.maxBuild.build));
 				}
-		/*		//	if (!table.Fields.Any(x => x.IsIndex))
-				//	{
-				//		Field autoGenerate = new Field()
-				//		{
-				//			Name = "ID",
-				//			AutoGenerate = true,
-				//			IsIndex = true
-				//		};
 
-				//		table.Fields.Insert(0, autoGenerate);
-				//	}
-
-					if (relation != null) // force to the end
-						table.Fields.Add(relation);
-
-
-					newtables.Add(table);*/
 				foreach (var dbdbuild in dbdversion.builds)
 				{
 					newtables.Add(BuildTable(dbdversion, dbdef, dbName, DBDefsLib.Utils.BuildToString(dbdbuild), dbdbuild.build));
