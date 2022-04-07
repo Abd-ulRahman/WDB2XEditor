@@ -207,17 +207,17 @@ namespace DBDefsLib
 
                         var annotations = new List<string>(line.Substring(annotationStart + 1, annotationEnd - annotationStart - 1).Split(','));
 
-                        if (annotations.Contains("id"))
+                        if (annotations.Contains("$id"))
                         {
                             definition.isID = true;
                         }
 
-                        if (annotations.Contains("noninline"))
+                        if (annotations.Contains("$noninline"))
                         {
                             definition.isNonInline = true;
                         }
 
-                        if (annotations.Contains("relation"))
+                        if (annotations.Contains("$relation"))
                         {
                             definition.isRelation = true;
                         }
