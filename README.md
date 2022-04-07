@@ -14,6 +14,8 @@ AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/y4sp6sij
 
 ![alt tag](https://i.imgur.com/lC6jVLw.jpg "WDB2")
 
+Please any one can help with commit 58a689ea36990b31efeb320006447fae65ca4740
+
 ### About
 This editor has full support for reading and saving all release versions of DBC, DB2, WDB, ADB and DBCache. This does include support for Legion DB2 and DBCache files and works with all variants (header flags) of these.
 Like the other editors I've used a definition based system whereby definitions tell the editor how to interpret each file's columns - this is a lot more reliable than guessing column types but does mean the definitions must be maintained. So far, I've mapped almost all expansions with MoP being ~50% complete and everything else being 99%+ (excluding column names).
