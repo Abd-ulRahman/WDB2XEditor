@@ -175,26 +175,10 @@ namespace WDBXEditor.Storage
 		//public static async Task LoadDefinitions()
         public static void LoadDefinitions()
 		{
-			List<string> errors = new List<string>();
 			foreach (var file in Directory.GetFiles(DEFINITION_DIR, "*.dbd"))
-			//	Definitions.LoadDBDefinition(file);
 			{
-				Definitions.LoadDBDefinition(file, out List<string> error);
-				errors.AddRange(error);
+				Definitions.LoadDBDefinition(file);
 			}
-
-			if(errors.Count > 0)
-			{
-				new ErrorReport(errors).ShowDialog(FormHandler.GetForm<Main>());
-			}				
-
-
-
-			//await Task.Factory.StartNew(() =>
-			//{
-			//    foreach (var file in Directory.GetFiles(DEFINITION_DIR, "*.xml"))
-			//        Definitions.LoadDefinition(file);
-			//});
 		}
 		#endregion
 
