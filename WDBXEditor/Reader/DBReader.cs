@@ -115,8 +115,6 @@ namespace WDBXEditor.Reader
 				if (header.CheckTableStructure && entry.TableStructure == null)
 					throw new Exception("Definition missing.");
 
-			//	if (header.FieldCount != entry.TableStructure.Fields.Where(x => !x.AutoGenerate).Sum(x => x.ArraySize))
-			//	if (header.FieldCount != entry.TableStructure.Fields.Count(x => !x.AutoGenerate && !x.Relationship && !x.NonInline))
 				if (header.FieldCount != GetFieldCount(header, entry))
 					throw new Exception("Column mismatch.");
 
@@ -136,19 +134,6 @@ namespace WDBXEditor.Reader
 
 					stream.Dispose();
 					return entry;
-			/*	}
-				else if (header.IsTypeOf<WDBC>() || header.IsTypeOf<WDB2>())
-				{
-					long stringTableStart = dbReader.BaseStream.Position += header.RecordCount * header.RecordSize;
-					Dictionary<int, string> StringTable = new StringTable().Read(dbReader, stringTableStart); //Get stringtable
-					dbReader.Scrub(pos);
-
-					ReadIntoTable(ref entry, dbReader, StringTable); //Read data
-
-					stream.Dispose();
-					return entry;
-				}
-				else if (header.IsTypeOf<WDB5>() || header.IsTypeOf<WCH5>() || header.IsTypeOf<WDB6>())**/
 				}
 				else if (header.IsTypeOf<WDB3>() || header.IsTypeOf<WDB5>() || header.IsTypeOf<WCH5>() || header.IsTypeOf<WDB6>())
 				{
@@ -323,11 +308,7 @@ namespace WDBXEditor.Reader
 				//Scrub to the end of the record
 				if (dbReader.BaseStream.Position - offset < recordsize)
 					dbReader.BaseStream.Position += (recordsize - (dbReader.BaseStream.Position - offset));
-				else if (dbReader.BaseStream.Position - offset < recordsize)
-				//if (dbReader.BaseStream.Position - offset < 72)
-				//	dbReader.BaseStream.Position += (72 - (dbReader.BaseStream.Position - offset));
-				//else if (dbReader.BaseStream.Position - offset < 72)
-					throw new Exception("Definition exceeds record size");
+				else if (dbReader.BaseStream.Position - offset > recordsize)
 			}
 
 			entry.Header.Clear();
@@ -339,6 +320,8 @@ namespace WDBXEditor.Reader
 			// TODO more...
 			if (header.IsTypeOf<WDC1>())
 				return entry.TableStructure.Fields.Count(x => !x.AutoGenerate && !x.NonInline);
+			else
+				return entry.TableStructure.Fields.Count(x => !x.AutoGenerate && !( x.Relationship || x.NonInline));
 
 			return entry.TableStructure.Fields.Where(x => !x.AutoGenerate && !x.NonInline && !x.Name.ToLower().StartsWith("padding")).Sum(x => x.ArraySize);
 		}
