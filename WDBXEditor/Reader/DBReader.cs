@@ -309,6 +309,7 @@ namespace WDBXEditor.Reader
 				if (dbReader.BaseStream.Position - offset < recordsize)
 					dbReader.BaseStream.Position += (recordsize - (dbReader.BaseStream.Position - offset));
 				else if (dbReader.BaseStream.Position - offset > recordsize)
+					throw new Exception("Definition exceeds record size");
 			}
 
 			entry.Header.Clear();
