@@ -130,14 +130,15 @@ namespace WDBXEditor.Storage
 
 			Func<string, string> formatFieldName = (s) =>
 			{
-				string[] parts = s.Split('_');
+				//string[] parts = s.Split('_');
+				string[] parts = s.Split(new[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
 				for (int i = 0; i < parts.Length; i++)
 					parts[i] = char.ToUpper(parts[i][0]) + parts[i].Substring(1);
 
 				return string.Join("_", parts);
 			};
 
-
+			Field relation = null;
 			var newtables = new List<Table>();
 
 			foreach (var dbdversion in dbdef.versionDefinitions)
@@ -149,8 +150,6 @@ namespace WDBXEditor.Storage
 					table.BuildText = DBDefsLib.Utils.BuildToString(dbdbuild);
 					table.Fields = new List<Field>();
 					table.Name = dbName;
-
-					Field relation = null;
 					foreach (var dbdfield in dbdversion.definitions)
 					{
 						var field = new Field();
@@ -167,6 +166,10 @@ namespace WDBXEditor.Storage
 
 						field.Name = formatFieldName(dbdfield.name);
 						field.Type = DBDTypeToWDBXType(dbdef.columnDefinitions[dbdfield.name].type, dbdfield.size);
+						//field.AutoGenerate = dbdfield.isNonInline; // omitted : Strings not found in string table
+
+						if (field.AutoGenerate && !field.IsIndex) 
+							continue; // skip relationship data columns but keep parent columns
 
 						if (dbdfield.isNonInline && dbdfield.isRelation)
 						{
@@ -183,22 +186,6 @@ namespace WDBXEditor.Storage
 
 						table.Fields.Add(field);
 					}
-
-					// WDBX requires an ID column - dbd apparently doesn't
-					if (!table.Fields.Any(x => x.IsIndex))
-					{
-						Field autoGenerate = new Field()
-						{
-							Name = "ID",
-							AutoGenerate = true,
-							IsIndex = true
-						};
-
-						table.Fields.Insert(0, autoGenerate);
-					}
-
-					if (relation != null) // force to the end
-						table.Fields.Add(relation);
 
 					newtables.Add(table);
 				}
@@ -235,6 +222,7 @@ namespace WDBXEditor.Storage
 	}
 
 	[Serializable]
+//	public class Field
 	public class Field : ICloneable
 	{
 		[XmlAttribute]
