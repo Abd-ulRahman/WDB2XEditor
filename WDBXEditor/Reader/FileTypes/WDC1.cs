@@ -23,7 +23,7 @@ namespace WDBXEditor.Reader.FileTypes
 
 		public List<ColumnStructureEntry> ColumnMeta;
 		public RelationShipData RelationShipData;
-		//public Dictionary<int, MinMax> MinMaxValues;
+		public Dictionary<int, MinMax> MinMaxValues;
 
 		protected int[] columnSizes;
 		protected byte[] recordData;
