@@ -217,7 +217,7 @@ namespace DBDefsLib
                             definition.isNonInline = true;
                         }
 
-                        if (annotations.Contains("$relation"))
+                        if (annotations.Contains("relation"))
                         {
                             definition.isRelation = true;
                         }
