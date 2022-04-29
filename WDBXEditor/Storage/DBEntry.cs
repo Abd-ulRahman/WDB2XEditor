@@ -1,4 +1,4 @@
-﻿using WDBXEditor.Common;
+using WDBXEditor.Common;
 using WDBXEditor.Reader;
 using MySql.Data.MySqlClient;
 using WDBXEditor.Archives.MPQ;
@@ -23,6 +23,7 @@ using System.IO.MemoryMappedFiles;
 using System.Security.AccessControl;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using CompressionType = WDBXEditor.Common.Constants.CompressionType;
 
 namespace WDBXEditor.Storage
 {
@@ -298,7 +299,7 @@ namespace WDBXEditor.Storage
 				foreach (var field in header.ColumnMeta)
 				{
 					Type type = Data.Columns[c].DataType;
-					bool isneeded = field.CompressionType >= Constants.CompressionType.Sparse;
+					bool isneeded = field.CompressionType >= CompressionType.Sparse;
 
 					if (bytecounts.ContainsKey(type) && isneeded)
 					{
@@ -749,7 +750,7 @@ namespace WDBXEditor.Storage
 					}
 				}
 			}
-			catch (FormatException)
+			catch (FormatException ex)
 			{
 				error = $"Mismatch of data to datatype in row index {usedids.Count + 1}";
 				return false;
@@ -770,8 +771,8 @@ namespace WDBXEditor.Storage
 					return false;
 			}
 
-			//if (!ValidateMinMaxValues(importTable, out error))
-			//	return false;
+			if (!ValidateMinMaxValues(importTable, out error))
+				return false;
 
 			UpdateData(importTable, mode);
 			return true;
@@ -826,8 +827,8 @@ namespace WDBXEditor.Storage
 					return false;
 			}
 
-			//if (!ValidateMinMaxValues(importTable, out error))
-			//	return false;
+			if (!ValidateMinMaxValues(importTable, out error))
+				return false;
 
 			UpdateData(importTable, mode);
 			return true;
@@ -837,37 +838,37 @@ namespace WDBXEditor.Storage
 		{
 			error = "";
 
-			//if (Header is WDC1 header)
-			//{
-			//	foreach (var minmax in header.MinMaxValues)
-			//	{
-			//		Func<dynamic, dynamic, dynamic, bool> compare = (x, min, max) => x < min || x > max;
+			if (Header is WDC1 header)
+			{
+				foreach (var minmax in header.MinMaxValues)
+				{
+					Func<dynamic, dynamic, dynamic, bool> compare = (x, min, max) => x < min || x > max;
 
-			//		bool errored = false;
+					bool errored = false;
 
-			//		var values = importTable.Rows.Cast<DataRow>().Select(x => x.ItemArray[minmax.Key]);
-			//		if (minmax.Value.IsSingle)
-			//		{
-			//			errored = values.Any(x => compare((float)Convert.ChangeType(x, typeof(float)), minmax.Value.MinVal, minmax.Value.MaxVal));
-			//		}
-			//		else if (minmax.Value.Signed)
-			//		{
-			//			errored = values.Any(x => compare((long)Convert.ChangeType(x, typeof(long)), minmax.Value.MinVal, minmax.Value.MaxVal));
-			//		}
-			//		else
-			//		{
-			//			errored = values.Any(x => compare((ulong)Convert.ChangeType(x, typeof(ulong)), minmax.Value.MinVal, minmax.Value.MaxVal));
-			//		}
+					var values = importTable.Rows.Cast<DataRow>().Select(x => x.ItemArray[minmax.Key]);
+					if (minmax.Value.IsSingle)
+					{
+						errored = values.Any(x => compare((float)Convert.ChangeType(x, typeof(float)), minmax.Value.MinVal, minmax.Value.MaxVal));
+					}
+					else if (minmax.Value.Signed)
+					{
+						errored = values.Any(x => compare((long)Convert.ChangeType(x, typeof(long)), minmax.Value.MinVal, minmax.Value.MaxVal));
+					}
+					else
+					{
+						errored = values.Any(x => compare((ulong)Convert.ChangeType(x, typeof(ulong)), minmax.Value.MinVal, minmax.Value.MaxVal));
+					}
 
-			//		if (errored)
-			//		{
-			//			error = $"Import Failed: Imported data has out of range values for {Data.Columns[minmax.Key].ColumnName}.\n" +
-			//					$"(Min: {minmax.Value.MinVal}, Max: {minmax.Value.MaxVal})";
+					if (errored)
+					{
+						error = $"Import Failed: Imported data has out of range values for {Data.Columns[minmax.Key].ColumnName}.\n" +
+								$"(Min: {minmax.Value.MinVal}, Max: {minmax.Value.MaxVal})";
 
-			//			return false;
-			//		}
-			//	}
-			//}
+						return false;
+					}
+				}
+			}
 
 			return true;
 		}
