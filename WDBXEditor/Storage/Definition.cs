@@ -188,7 +188,7 @@ namespace WDBXEditor.Storage
 					}
 
 					// WDBX requires an ID column - dbd apparently doesn't
-				/*	if (!table.Fields.Any(x => x.IsIndex))
+					if (!table.Fields.Any(x => x.IsIndex))
 					{
 						Field autoGenerate = new Field()
 						{
@@ -200,7 +200,7 @@ namespace WDBXEditor.Storage
 						table.Fields.Insert(0, autoGenerate);
 					}
 
-					if (relation != null) // force to the end
+				/*	if (relation != null) // force to the end
 						table.Fields.Add(relation);*/
 
 					newtables.Add(table);
