@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WDBXEditor.Storage;
 using static WDBXEditor.Common.Constants;
+using WDBXEditor.Commons;
 
 namespace WDBXEditor.Reader.FileTypes
 {
