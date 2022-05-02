@@ -24,6 +24,7 @@ using System.Security.AccessControl;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using CompressionType = WDBXEditor.Common.Constants.CompressionType;
+using WDBXEditor.Commons;
 
 namespace WDBXEditor.Storage
 {
@@ -299,7 +300,7 @@ namespace WDBXEditor.Storage
 				foreach (var field in header.ColumnMeta)
 				{
 					Type type = Data.Columns[c].DataType;
-					bool isneeded = field.CompressionType >= CompressionType.Sparse;
+					bool isneeded = field.CompressionType >= Commons.CompressionType.Sparse;
 
 					if (bytecounts.ContainsKey(type) && isneeded)
 					{
