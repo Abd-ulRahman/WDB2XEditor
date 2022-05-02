@@ -115,8 +115,8 @@ namespace WDBXEditor.Reader
 				if (header.CheckTableStructure && entry.TableStructure == null)
 					throw new Exception("Definition missing.");
 
-				if (header.FieldCount != GetFieldCount(header, entry))
-					throw new Exception("Column mismatch.");
+				//if (header.FieldCount != GetFieldCount(header, entry))
+				//	throw new Exception("Column mismatch.");
 
 				if (header is WDC1 wdc1)
 				{
