@@ -23,7 +23,6 @@ using System.IO.MemoryMappedFiles;
 using System.Security.AccessControl;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using CompressionType = WDBXEditor.Common.Constants.CompressionType;
 using WDBXEditor.Commons;
 
 namespace WDBXEditor.Storage
