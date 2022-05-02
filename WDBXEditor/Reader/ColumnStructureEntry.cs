@@ -24,7 +24,7 @@ namespace WDBXEditor.Reader
 				{
 					compressionType = value;
 				}
-				else
+				else // Never Happen just in case
 					try
 					{
 						if (value <= CompressionType.SignedImmediate && value >= CompressionType.None)
