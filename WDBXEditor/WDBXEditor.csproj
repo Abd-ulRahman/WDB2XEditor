@@ -314,6 +314,7 @@
     <Compile Include="Reader\DBHeader.cs" />
     <Compile Include="Reader\DBReader.cs" />
     <Compile Include="Reader\DBReaderExtensions.cs" />
+    <Compile Include="Reader\DBStructs.cs" />
     <Compile Include="Reader\FileTypes\HTFX.cs" />
     <Compile Include="Reader\FileTypes\WCH5.cs" />
     <Compile Include="Reader\FileTypes\WCH7.cs" />
