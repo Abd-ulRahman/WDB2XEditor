@@ -38,6 +38,8 @@ You will need [Microsoft .NET Framework 4.6.1](https://www.microsoft.com/en-us/d
 * A simple memory reader to get player's co-ordinates from the client
 * A colour picker for LightData and LightIntBand
 
+- Download latest Release for my repack at https://github.com/Abd-ulRahman
+
 ### Tools:
 * Definition editor for maintaining the definitions
 * WotLK Item Import to remove the dreaded red question mark from custom items
