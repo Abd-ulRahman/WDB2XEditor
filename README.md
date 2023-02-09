@@ -1,4 +1,7 @@
-# WDB2X Editor
+
+- Download latest Release of my Legundary Core Repack at https://github.com/Abd-ulRahman
+
+- # WDB2X Editor
 
 [![Latest Download](https://img.shields.io/badge/Latest-Download-blue.svg)](https://github.com/Abd-ulRahman/WDB2XEditor/releases/download/1.2.0.b/WDB2XEditor_Realease_v_1.2.0.b.rar) [![Bountysource](https://www.bountysource.com/badge/tracker?tracker_id=44220492)](https://www.bountysource.com/trackers/44220492-wowdevtools-wdbxeditor?utm_source=44433103&utm_medium=shield&utm_campaign=TRACKER_BADGE)
 [![WoWDevDiscord](https://img.shields.io/badge/Discord-WoWDev-blue.svg)](https://discord.gg/EzKJjtv)
@@ -38,7 +41,6 @@ You will need [Microsoft .NET Framework 4.6.1](https://www.microsoft.com/en-us/d
 * A simple memory reader to get player's co-ordinates from the client
 * A colour picker for LightData and LightIntBand
 
-- Download latest Release of my Legundary Core Repack at https://github.com/Abd-ulRahman
 
 ### Tools:
 * Definition editor for maintaining the definitions
