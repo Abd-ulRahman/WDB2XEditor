@@ -1,4 +1,4 @@
-##  Download latest Release of my Legundary Core Repack at https://github.com/Abd-ulRahman
+##  Download latest Release of my Legundary Core or ShadowLands 9.0.2.37474 Repack at https://github.com/Abd-ulRahman
 
 - # WDB2X Editor
 
