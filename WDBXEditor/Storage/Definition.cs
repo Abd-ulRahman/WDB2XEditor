@@ -196,7 +196,8 @@ namespace WDBXEditor.Storage
 						{
 						//	Name = "ID",
 							AutoGenerate = true,
-							IsIndex = true
+							IsIndex = true,
+						//	Type = "int"
 						};
 
 						table.Fields.Insert(0, autoGenerate);
