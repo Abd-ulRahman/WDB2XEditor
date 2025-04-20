@@ -98,7 +98,7 @@ namespace WDBXEditor.Storage
 				switch (size)
 				{
 					case 8:
-						return "byte";
+						return "sbyte";
 					case 16:
 						return "short";
 					case 32:
@@ -156,33 +156,35 @@ namespace WDBXEditor.Storage
 						if (dbdfield.arrLength > 0)
 						{
 							field.ArraySize = dbdfield.arrLength;
-						}
+                        }
 
-						if (dbdfield.isID || dbdfield.name == "ID")
-						{
-							field.IsIndex = true;
-							field.NonInline = dbdfield.isNonInline;
-						}
+                        if (!dbdfield.isNonInline && (dbdfield.isID || dbdfield.name == "ID"))
+                        {
+                            field.IsIndex = true;
+                        }
+                        if (dbdfield.isNonInline && (dbdfield.isID || dbdfield.name == "ID"))
+                        {
+                            field.IsIndex = true;
+                            field.NonInline = dbdfield.isNonInline;
+                        }
+                        if (dbdfield.isRelation && dbdfield.name == "Ui_order")
+                        {
+                            field.IsIndex = false;
+                            field.Relationship = dbdfield.isRelation;
+                        }
 
-						field.Name = formatFieldName(dbdfield.name);
+                        if (dbdfield.isNonInline && dbdfield.isRelation)
+                        {
+                            field.Relationship = dbdfield.isRelation;
+                            field.NonInline = dbdfield.isNonInline;
+                        }
+
+                        field.Name = formatFieldName(dbdfield.name);
 						field.Type = DBDTypeToWDBXType(dbdef.columnDefinitions[dbdfield.name].type, dbdfield.size);
 						//field.AutoGenerate = dbdfield.isNonInline; // omitted : Strings not found in string table
 
 						if (field.AutoGenerate && !field.IsIndex) 
 							continue; // skip relationship data columns but keep parent columns
-
-						if (dbdfield.isNonInline && dbdfield.isRelation)
-						{
-							field.Relationship = true; // append relations to the end
-							relation = field;
-							continue;
-						}
-						else if (dbdfield.isRelation)
-						{
-							relation = field.Clone() as Field;
-							relation.Relationship = true;
-							relation.Name = field.Name + "_RelationShip"; // append parents to the end
-						}
 
 						table.Fields.Add(field);
 					}
@@ -192,7 +194,7 @@ namespace WDBXEditor.Storage
 					{
 						Field autoGenerate = new Field()
 						{
-							Name = "ID",
+						//	Name = "ID",
 							AutoGenerate = true,
 							IsIndex = true
 						};
@@ -200,8 +202,8 @@ namespace WDBXEditor.Storage
 						table.Fields.Insert(0, autoGenerate);
 					}
 
-				/*	if (relation != null) // force to the end
-						table.Fields.Add(relation);*/
+					if (relation != null) // force to the end
+						table.Fields.Add(relation);
 
 					newtables.Add(table);
 				}
