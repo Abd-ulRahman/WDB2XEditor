@@ -233,7 +233,7 @@ namespace WDBXEditor.Storage
 		public void Load()
 		{
 			Key = Fields.FirstOrDefault(x => x.IsIndex);
-			//BuildText = BuildText(Build);
+			BuildText = BuildText(Build);
 		}
 	}
 
