@@ -65,7 +65,7 @@ namespace WDBXEditor.Common
 			TakeNewest
 		}
 
-        public enum CompressionType
+/*        public enum CompressionType
 		{
 			None = 0,
 			Immediate = 1,
@@ -73,7 +73,7 @@ namespace WDBXEditor.Common
 			Pallet = 3,
 			PalletArray = 4,
 			SignedImmediate = 5
-		}
+		}*/
 
 		public enum Expansion
 		{
