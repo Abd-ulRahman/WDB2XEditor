@@ -395,7 +395,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="Definitions\Offsets.json">
+    <None Include="..\WoWDBDefs\Definitions\Offsets.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Help.chm">
