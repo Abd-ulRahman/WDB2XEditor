@@ -78,6 +78,9 @@ namespace WDBXEditor
 			Database.LoadDefinitions();
 			AutoRun();
 
+			//Add Watcher
+			Watcher();
+
 			//Setup Single Instance Delegate
 			InstanceManager.AutoRunAdded += delegate
 			{
