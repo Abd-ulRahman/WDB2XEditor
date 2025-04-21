@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -98,7 +98,7 @@ namespace WDBXEditor.Storage
 				switch (size)
 				{
 					case 8:
-						return "sbyte";
+						return "byte";
 					case 16:
 						return "short";
 					case 32:
@@ -120,17 +120,21 @@ namespace WDBXEditor.Storage
 			}
 		}
 
-		public bool LoadDBDefinition(string path)
-		{
-			if (_loading) return true;
 
-			var reader = new DBDefsLib.DBDReader();
-			var dbdef = reader.Read(path);
-			var dbName = Path.GetFileNameWithoutExtension(path);
+		private Table BuildTable(DBDefsLib.Structs.VersionDefinitions dbdversion,
+									DBDefsLib.Structs.DBDefinition dbdef,
+									string dbName,
+									string buildtext,
+									uint build)
+		{
+			var table = new Table();
+			table.Build = (int)build;
+			table.BuildText = buildtext;
+			table.Fields = new List<Field>();
+			table.Name = dbName;
 
 			Func<string, string> formatFieldName = (s) =>
 			{
-				//string[] parts = s.Split('_');
 				string[] parts = s.Split(new[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
 				for (int i = 0; i < parts.Length; i++)
 					parts[i] = char.ToUpper(parts[i][0]) + parts[i].Substring(1);
@@ -139,78 +143,92 @@ namespace WDBXEditor.Storage
 			};
 
 			Field relation = null;
+			foreach (var dbdfield in dbdversion.definitions)
+			{
+				var field = new Field();
+				if (dbdfield.arrLength > 0)
+				{
+					field.ArraySize = dbdfield.arrLength;
+				}
+
+				if (dbdfield.isID || dbdfield.name == "ID")
+				{
+					field.IsIndex = true;
+					field.NonInline = dbdfield.isNonInline;
+                }
+                
+				field.Name = formatFieldName(dbdfield.name);
+				field.Type = DBDTypeToWDBXType(dbdef.columnDefinitions[dbdfield.name].type, dbdfield.size);
+
+				if (dbdfield.isNonInline && dbdfield.isRelation)
+				{
+					field.Relationship = true; // append relations to the end
+					relation = field;
+					continue;
+                }
+
+                if (dbdfield.isRelation && dbdfield.name == "Ui_order")
+                {
+                    field.IsIndex = false;
+                    relation = field.Clone() as Field;
+                    relation.Relationship = true;
+                    relation.Relationship = dbdfield.isRelation;
+                    relation.Name = field.Name + "_RelationShip"; // append parents to the end
+                    continue;
+                }
+
+                table.Fields.Add(field);
+			}
+
+			// WDBX requires an ID column
+			if (!table.Fields.Any(x => x.IsIndex))
+			{
+				Field autoGenerate = new Field()
+				{
+					Name = "ID",
+					AutoGenerate = true,
+					IsIndex = true,
+					Type = "int"
+				};
+
+				table.Fields.Insert(0, autoGenerate);
+			}
+
+			if (relation != null) // force to the end
+				table.Fields.Add(relation);
+
+			return table;
+		}
+
+		public bool LoadDBDefinition(string path, out List<string> errors)
+		{
+			errors = new List<string>();
+
+			if (_loading) return true;
+
+			var reader = new DBDefsLib.DBDReader();
+			var dbdef = reader.Read(path);
+			var dbName = Path.GetFileNameWithoutExtension(path);
+
 			var newtables = new List<Table>();
 
+			// going to need some form of build lookup or summat for ranges...
 			foreach (var dbdversion in dbdef.versionDefinitions)
 			{
+				foreach (var dbdbuild in dbdversion.buildRanges)
+				{
+					newtables.Add(BuildTable(dbdversion, dbdef, dbName, DBDefsLib.Utils.BuildToString(dbdbuild.minBuild), dbdbuild.minBuild.build));
+					newtables.Add(BuildTable(dbdversion, dbdef, dbName, DBDefsLib.Utils.BuildToString(dbdbuild.maxBuild), dbdbuild.maxBuild.build));
+				}
+
 				foreach (var dbdbuild in dbdversion.builds)
 				{
-					var table = new Table();
-					table.Build = (int)dbdbuild.build;
-					table.BuildText = DBDefsLib.Utils.BuildToString(dbdbuild);
-					table.Fields = new List<Field>();
-					table.Name = dbName;
-					foreach (var dbdfield in dbdversion.definitions)
-					{
-						var field = new Field();
-						if (dbdfield.arrLength > 0)
-						{
-							field.ArraySize = dbdfield.arrLength;
-                        }
-
-                        if (!dbdfield.isNonInline && (dbdfield.isID || dbdfield.name == "ID"))
-                        {
-                            field.IsIndex = true;
-                        }
-                        if (dbdfield.isNonInline && (dbdfield.isID || dbdfield.name == "ID"))
-                        {
-                            field.IsIndex = true;
-                            field.NonInline = dbdfield.isNonInline;
-                        }
-                        if (dbdfield.isRelation && dbdfield.name == "Ui_order")
-                        {
-                            field.IsIndex = false;
-                            field.Relationship = dbdfield.isRelation;
-                        }
-
-                        if (dbdfield.isNonInline && dbdfield.isRelation)
-                        {
-                            field.Relationship = dbdfield.isRelation;
-                            field.NonInline = dbdfield.isNonInline;
-                        }
-
-                        field.Name = formatFieldName(dbdfield.name);
-						field.Type = DBDTypeToWDBXType(dbdef.columnDefinitions[dbdfield.name].type, dbdfield.size);
-						//field.AutoGenerate = dbdfield.isNonInline; // omitted : Strings not found in string table
-
-						if (field.AutoGenerate && !field.IsIndex) 
-							continue; // skip relationship data columns but keep parent columns
-
-						table.Fields.Add(field);
-					}
-
-					// WDBX requires an ID column - dbd apparently doesn't
-					if (!table.Fields.Any(x => x.IsIndex))
-					{
-						Field autoGenerate = new Field()
-						{
-						//	Name = "ID",
-							AutoGenerate = true,
-							IsIndex = true,
-						//	Type = "int"
-						};
-
-						table.Fields.Insert(0, autoGenerate);
-					}
-
-					if (relation != null) // force to the end
-						table.Fields.Add(relation);
-
-					newtables.Add(table);
+					newtables.Add(BuildTable(dbdversion, dbdef, dbName, DBDefsLib.Utils.BuildToString(dbdbuild), dbdbuild.build));
 				}
 			}
 
 			newtables.ForEach(x => x.Load());
+			errors.AddRange(newtables.Where(x => x.Key == null).Select(x => $"{x.Name} {x.BuildText} missing ID."));
 			Tables.UnionWith(newtables.Where(x => x.Key != null));
 
 			return true;
@@ -241,7 +259,6 @@ namespace WDBXEditor.Storage
 	}
 
 	[Serializable]
-//	public class Field
 	public class Field : ICloneable
 	{
 		[XmlAttribute]

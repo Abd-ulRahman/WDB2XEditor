@@ -1,4 +1,4 @@
-using WDBXEditor.Reader;
+﻿using WDBXEditor.Reader;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,6 +10,8 @@ using System.Data;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Windows.Forms;
+using WDBXEditor.Common;
+using WDBXEditor.Forms;
 
 namespace WDBXEditor.Storage
 {
@@ -42,7 +44,6 @@ namespace WDBXEditor.Storage
                 {
                     string file;
                     files.TryDequeue(out file);
-                 //   //files.TryDequeue(out string file);
                     try
                     {
                         DBReader reader = new DBReader();
@@ -169,16 +170,20 @@ namespace WDBXEditor.Storage
         #endregion
 
         #region Defintions
-        public static async Task LoadDefinitions()
+        public static void LoadDefinitions()
         {
-			foreach (var file in Directory.GetFiles(DEFINITION_DIR, "*.dbd"))
-				Definitions.LoadDBDefinition(file);
+			List<string> errors = new List<string>();
 
-			//await Task.Factory.StartNew(() =>
-			//{
-			//    foreach (var file in Directory.GetFiles(DEFINITION_DIR, "*.xml"))
-			//        Definitions.LoadDefinition(file);
-			//});
+			foreach (var file in Directory.GetFiles(DEFINITION_DIR, "*.dbd"))
+			{
+				Definitions.LoadDBDefinition(file, out List<string> error);
+				errors.AddRange(error);
+			}
+
+			if(errors.Count > 0)
+			{
+				new ErrorReport(errors).ShowDialog(FormHandler.GetForm<Main>());
+			}
 		}
 		#endregion
 
