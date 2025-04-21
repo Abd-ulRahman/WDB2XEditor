@@ -112,7 +112,7 @@ namespace WDBXEditor
 
 			lbDefinitions.BeginUpdate();
             
-            if (datasource.Count() == 0)
+            if (datasource?.Count() == 0)
             {
                 lbDefinitions.DataSource = null;
             }
