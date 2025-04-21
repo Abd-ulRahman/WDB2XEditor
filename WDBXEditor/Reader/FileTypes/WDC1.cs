@@ -403,11 +403,11 @@ namespace WDBXEditor.Reader.FileTypes
 
 			if (!entry.Data.Columns.Cast<DataColumn>().Any(x => x.ExtendedProperties.ContainsKey("RELATIONSHIP")))
 			{
-				//DataColumn dataColumn = new DataColumn("RelationshipData", typeof(uint));
-				//dataColumn.ExtendedProperties.Add("RELATIONSHIP", true);
-				//entry.Data.Columns.Add(dataColumn);
-				var col = entry.TableStructure.Fields.FirstOrDefault(x => x.Relationship);
-				entry.Data.Columns.Cast<DataColumn>().First(x => x.ColumnName == col.Name).ExtendedProperties.Add("RELATIONSHIP", true);
+				DataColumn dataColumn = new DataColumn("RelationshipData", typeof(uint));
+				dataColumn.ExtendedProperties.Add("RELATIONSHIP", true);
+				entry.Data.Columns.Add(dataColumn);
+				//var col = entry.TableStructure.Fields.FirstOrDefault(x => x.Relationship);
+			//	//entry.Data.Columns.Cast<DataColumn>().First(x => x.ColumnName == col.Name).ExtendedProperties.Add("RELATIONSHIP", true);
 			}
 		}
 		#endregion
