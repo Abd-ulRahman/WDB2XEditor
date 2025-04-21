@@ -115,8 +115,8 @@ namespace WDBXEditor.Reader
 				if (header.CheckTableStructure && entry.TableStructure == null)
 					throw new Exception("Definition missing.");
 
-				//if (header.FieldCount != GetFieldCount(header, entry))
-				//	throw new Exception("Column mismatch.");
+				if (header.FieldCount != GetFieldCount(header, entry))
+					throw new Exception("Column mismatch.");
 
 				if (header is WDC1 wdc1)
 				{
@@ -322,9 +322,7 @@ namespace WDBXEditor.Reader
 			if (header.IsTypeOf<WDC1>())
 				return entry.TableStructure.Fields.Count(x => !x.AutoGenerate && !x.NonInline);
 			else
-				return entry.TableStructure.Fields.Count(x => !x.AutoGenerate && !( x.Relationship || x.NonInline));
-
-			return entry.TableStructure.Fields.Where(x => !x.AutoGenerate && !x.NonInline && !x.Name.ToLower().StartsWith("padding")).Sum(x => x.ArraySize);
+				return entry.TableStructure.Fields.Where(x => !x.AutoGenerate && !x.NonInline && !x.Name.ToLower().StartsWith("padding")).Sum(x => x.ArraySize);
 		}
 		#endregion
 
