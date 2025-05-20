@@ -1,0 +1,10 @@
+COLUMNS
+int ID
+int<Item::ID> ItemID
+int<CraftingItem::ID> CraftingItemID?
+
+LAYOUT 0EADD62B
+BUILD 10.0.0.43342
+$noninline,id$ID<32>
+ItemID<32>
+$noninline,relation$CraftingItemID<32>
