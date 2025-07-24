@@ -1,6 +1,6 @@
 # WDBX Editor
 
-[![Latest Download](https://img.shields.io/badge/Latest-Download-blue.svg)](https://github.com/Abd-ulRahman/WDB2XEditor/releases/download/1.2.1.a/WDBXEditor-Release.rar) [![Bountysource](https://www.bountysource.com/badge/tracker?tracker_id=44220492)](https://www.bountysource.com/trackers/44220492-wowdevtools-wdbxeditor?utm_source=44433103&utm_medium=shield&utm_campaign=TRACKER_BADGE)
+[![Latest Download](https://img.shields.io/badge/Latest-Download-blue.svg)](https://ci.appveyor.com/api/projects/majorcyto/wdbxeditor/artifacts/WDBXEditor.zip) [![Bountysource](https://www.bountysource.com/badge/tracker?tracker_id=44220492)](https://www.bountysource.com/trackers/44220492-wowdevtools-wdbxeditor?utm_source=44433103&utm_medium=shield&utm_campaign=TRACKER_BADGE)
 [![WoWDevDiscord](https://img.shields.io/badge/Discord-WoWDev-blue.svg)](https://discord.gg/EzKJjtv)
 
 
