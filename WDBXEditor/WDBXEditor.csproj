@@ -537,8 +537,8 @@
   -->
 <Target Name="AfterCompile">
     <ItemGroup>
-        <MyFiles Include="..\WoWDBDefs\Definitions\**\*.*"/>
+        <DBDFiles Include="..\WoWDBDefs\Definitions\**\*.*"/>
     </ItemGroup>
-    <Copy SourceFiles="@(MyFiles)" DestinationFolder="$(OutDir)\Definitions"/>
+    <Copy SourceFiles="@(DBDFiles)" DestinationFolder="$(OutDir)\Definitions"/>
 </Target>
 </Project>
