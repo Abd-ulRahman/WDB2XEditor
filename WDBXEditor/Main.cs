@@ -1423,11 +1423,12 @@ namespace WDBXEditor
 
 		private void Watcher()
 		{
+                        string[] extensions = { ".dbd", ".xml" }; // Add your desired file types
 			watcher = new FileSystemWatcher
 			{
 				Path = Path.GetDirectoryName(DEFINITION_DIR),
 				NotifyFilter = NotifyFilters.LastWrite,
-				Filter = "*.*",
+				Filter = extensions.ToString(),
                 EnableRaisingEvents = true
 			};
 			watcher.Changed += delegate { Task.Run(() => Database.LoadDefinitions()); };
