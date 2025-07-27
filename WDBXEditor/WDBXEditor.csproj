@@ -506,10 +506,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Definitions\*.dbd">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
     <None Include="Resources\open-new.png" />
     <None Include="Resources\target.png" />
     <None Include="Resources\search.png" />
@@ -539,4 +535,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+<Target Name="AfterCompile">
+    <ItemGroup>
+        <MyFiles Include="..\WoWDBDefs\Definitions\**\*.*"/>
+    </ItemGroup>
+    <Copy SourceFiles="@(MyFiles)" DestinationFolder="$(OutDir)\Definitions"/>
+</Target>
 </Project>
