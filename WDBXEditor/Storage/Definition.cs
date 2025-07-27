@@ -43,7 +43,8 @@ namespace WDBXEditor.Storage
 		{
 			Func<string, string> ValidFilename = b =>
 			{
-				return string.Join("_", b.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.') + ".xml";
+                                string[] extensions = { ".dbd", ".xml" }; // Add your desired file types
+				return string.Join("_", b.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.') + extensions.ToString();
 			};
 
 			try
