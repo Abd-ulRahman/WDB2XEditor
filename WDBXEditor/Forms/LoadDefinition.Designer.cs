@@ -64,7 +64,7 @@ namespace WDBXEditor
 			// 
 			// openFileDialog
 			// 
-			this.openFileDialog.Filter = "XML Files|*.xml";
+			this.openFileDialog.Filter = "Files|*.*";
 			// 
 			// label3
 			// 
