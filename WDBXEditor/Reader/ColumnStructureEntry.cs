@@ -12,7 +12,27 @@ namespace WDBXEditor.Reader
 		public ushort RecordOffset { get; set; }
 		public ushort Size { get; set; }
 		public uint AdditionalDataSize { get; set; }
-		public CompressionType CompressionType { get; set; }
+		private CompressionType compressionType;
+		public CompressionType CompressionType
+		{
+			get { return compressionType; }
+			set
+			{
+				if (value >= CompressionType.None && value <= CompressionType.SignedImmediate)
+				{
+					compressionType = value;
+				}
+				else // Never happens just in case
+				try
+				{
+					if (value <= CompressionType.SignedImmediate && value >= CompressionType.None)
+					{
+						compressionType = value;
+					}
+				}
+				catch (Exception) { }
+			}
+		}
 		public int BitOffset { get; set; }  // used as common data column for Sparse
 		public int BitWidth { get; set; }
 		public int Cardinality { get; set; } // flags for Immediate, &1: Signed
