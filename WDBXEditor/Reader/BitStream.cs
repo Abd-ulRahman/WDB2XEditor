@@ -172,24 +172,34 @@ namespace WDBXEditor.Reader
 
 		#region Read
 
+		
 		public byte[] ReadBytes(long length, bool isBytes = false, long byteLength = 0)
 		{
-			if (isBytes)
-				length *= 8;
-
-			byteLength = (byteLength == 0 ? (length + 7) / 8 : byteLength);
-
-			byte[] data = new byte[byteLength];
-			for (long i = 0; i < length;)
-			{
-				byte value = 0;
-				for (int p = 0; p < 8 && i < length; i++, p++)
-					value |= (byte)(ReadBit() << p);
-
-				data[((i + 7) / 8) - 1] = value;
-			}
-
-			return data;
+		    if (isBytes)
+		        length *= 8;
+		    
+		    byteLength = (byteLength == 0 ? (length + 7) / 8 : byteLength);
+		    
+		    byte[] data = new byte[byteLength];
+		    long byteIndex = 0;
+		    
+		    for (long i = 0; i < length;)
+		    {
+		        byte value = 0;
+		        for (int p = 0; p < 8 && i < length; i++, p++)
+		        {
+		            value |= (byte)(ReadBit() << p);
+		        }
+		        
+		        // Write to the correct byte only when we've completed 8 bits or reached the end
+		        if (byteIndex < byteLength)
+		        {
+		            data[byteIndex] = value;
+		            byteIndex++;
+		        }
+		    }
+		    
+		    return data;
 		}
 
 		public byte[] ReadBytesPadded(long length)
